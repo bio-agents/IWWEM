@@ -1,0 +1,342 @@
+<html>
+<head>
+	<title>INB IWWE&amp;M v0.7.0 frontends call parameters ($Rev$, $Date$)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style/docs.css">
+	<!--
+		$Id$
+		frontends.html
+		from INB Interactive Web Workflow Enactor & Manager (IWWE&M)
+		Author: José María Fernández González (C) 2007-2008
+		Institutions:
+		*	Spanish National Cancer Research Institute (CNIO, http://www.cnio.es/)
+		*	Spanish National Bioinformatics Institute (INB, http://www.inab.org/)
+
+		This documentation is part of IWWE&M, the Interactive Web Workflow Enactor & Manager.
+		As it is documentation, it is under a double license:
+		
+		========================== First license block =========================
+		IWWE&M is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Affero General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		IWWE&M is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Affero General Public License for more details.
+
+		You should have received a copy of the GNU Affero General Public License
+		along with IWWE&M.  If not, see <http://www.gnu.org/licenses/agpl.txt>.
+
+		Original IWWE&M concept, design and coding done by José María Fernández González, INB (C) 2008.
+		Source code of IWWE&M is available at http://trac.bioinfo.cnio.es/trac/iwwem
+		======================= End of First license block =====================
+
+		========================= Second license block =========================
+
+		"INB IWWE&M frontends call parameters" by Jos� Mar�a Fern�ndez Gonz�lez is
+		licensed under a Creative Commons Attribution-Share Alike 3.0 Unported License
+		<http://creativecommons.org/licenses/by-sa/3.0/>. Based on
+		a work at http://trac.bioinfo.cnio.es/trac/iwwem
+		===================== End of Second license block ======================
+	-->
+	<link rel="shortcut icon" href="../style/IWWEM-favicon.ico" type="image/vnd.microsoft.icon">
+	<link rel="icon" href="../style/IWWEM-favicon.ico" type="image/vnd.microsoft.icon">
+</head>
+<body>
+<div class="svndate">$Date$</div>
+<div class="svnrev">$Rev$</div>
+<div class="doctitle"><h1><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB" title="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a> v0.7.0 frontends</h1></div>
+Currently, IWWE&amp;M has 6 frontends, used by AJAX GUIs:
+<ul>
+<li><span class="frontend"><a href="#workflowmanager">workflowmanager</a></span></li>
+<li><span class="frontend"><a href="#enactionlauncher">enactionlauncher</a></span></li>
+<li><span class="frontend"><a href="#enactionstatus">enactionstatus</a></span></li>
+<li><span class="frontend"><a href="#IWWEMproxy">IWWEMproxy</a></span></li>
+<li><span class="frontend"><a href="#IWWEMconfirm">IWWEMconfirm</a></span></li>
+<li><span class="frontend"><a href="#IWWEMfs">IWWEMfs</a></span></li>
+</ul>
+<p>First of all, all these frontends have lots of parameters, and some of them may contain international characters, like Spanish <span class="value">&ntilde;</span> or French and Catalonian <span class="value">&ccedil;</span>. So, all these frontends expect that must of their parameters <b>are encoded in UTF-8</b>, no more, no less. The only exceptions are <span class="parameter">PARAM_</span> prefixed parameters passed as files, whose encoding can be driven by their corresponding <span class="parameter">ENCODING_</span> prefixed parameters</p>
+<p>All these frontends use the concept of Ids: workflow Ids, example Ids, enaction Ids, snapshot Ids and confirmation Ids. All the unqualified Ids have the format of an <a href="http://en.wikipedia.org/wiki/UUID">UUID</a>, but there are some differences when the IDs are fully qualified:</p>
+<ul>
+<li>Any unqualified workflow Id has the format of an UUID, for instance <span class="value">2365b91b-b7ae-4aa9-ae70-e8be4f40c0b3</span>. In some contexts, workflow Ids can be used in its unqualified representation, but its qualified representation would be <span class="value">workflow:2365b91b-b7ae-4aa9-ae70-e8be4f40c0b3</span>. So its qualified format is <span class="value">workflow:{wUUID}</span>, where <span class="value">wUUID</span> is the workflow Id. An external public workflow (one which is not stored in IWWE&amp;M) would be referenced using its URI (which is not always an URL). For instance, <span class="value">myExperiment:58</span>.</li>
+<li>As an example Id depends on a workflow, a fully qualified example Id has the format of <span class="value">example:{wUUID}:{eUUID}</span>, where <span class="value">wUUID</span> is the workflow Id and <span class="value">eUUID</span> is the example Id.
+For instance:
+<div align="center"><span class="value">example:0b4d3b5c-d4e7-4697-a831-7be74a35943b:f81c2a2a-3a85-454a-a9fe-077b2fcc6201</span></div>
+</li>
+<li>Any enaction Id has the format of an UUID, for instance <span class="value">7fd924fe-17de-428b-b5ca-607fab01eb9a</span>. In some contexts it is needed to differentiate between a workflow Id and an enaction Id, so its qualified form is <span class="value">enaction:{nUUID}</span>, where <span class="value">nUUID</span> is the enaction Id. An example of its qualified form is <span class="value">enaction:7fd924fe-17de-428b-b5ca-607fab01eb9a</span>
+</li>
+<li>As an snapshot Id depends on a workflow, a fully qualified snapshot Id has the format of
+<span class="value">snapshot:{wUUID}:{sUUID}</span>, where <span class="value">wUUID</span> is the workflow Id and <span class="value">sUUID</span> is the snapshot Id. For instance:
+<div align="center"><span class="value">snapshot:bd7c0e35-8749-45d9-9340-50f40d72de2f:fb71bf25-c17b-4345-a379-a52c1249ecb7</span></div>
+</li>
+<li>Any confirmation Id has the format of an UUID, for instance <span class="value">a365b91b-b7ae-4aac-ae70-e8be4f48c0b3</span>. So, confirmation Ids have the same qualified and unqualified representation.</li>
+</ul>
+<hr>
+
+<div align="center"><h2><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a>: <span class="frontend"><a name="workflowmanager">workflowmanager</a></span> frontend documentation and call parameters</h2></div>
+
+<div align="justify">
+<p>The <span class="frontend">workflowmanager</span> frontend is responsible of all the workflow repository management tasks,
+like workflow uploading and validation, workflow repository description, and workflow deletion.
+Each time a workflow is uploaded, <span class="frontend">workflowmanager</span> tries resolving all its dependencies before
+validating it using INBWorkflowParserWrapper.</p>
+<p>The <span class="frontend">workflowmanager</span> frontend receives a set of optional input parameters, described below.
+Then, it answers the list of available workflows and an optional message about the success of the
+operation described by the optional input parameters, in XML. This XML content follows XML Schema
+defined at <a href="IWWEM-messages.xsd">IWWEM-messages.xsd</a>, which is described
+at <a href="IWWEM-messages.xsd.html">IWWEM-messages.xsd.html</a>.</p>
+</div>
+
+<h3>Call parameters</h3>
+
+When this frontend is called with no input parameter, it answers the detailed status of the workflow repository <i><a href="../cgi-bin/workflowmanager">(see live example)</a></i>. Additional
+parameters are used for the workflow repository maintenance:
+
+<ul>
+<li><u><span class="parameter">id</span> <i>(optional)</i></u>:
+When this parameter is set with an identifier (workflow Id, qualified enaction Id, qualified snapshot Id), <span class="frontend">workflowmanager</span> frontend change its default behavior, listing only this information instead of the default one (whole workflow repository listing). When this parameter is set with special keyword <span class="value">enaction:</span>, <span class="frontend">workflowmanager</span> frontend change its default behavior, listing whole enaction repository information as workflows. Last, when this parameter is set to a partially qualified snapshot Id, in the form of <span class="value">snapshot:{wUUID}</span>, <span class="frontend">workflowmanager</span> frontend change its default behavior, listing whole snapshot information associated to workflow <span class="value">{wUUID}</span> as workflows.
+</li>
+<li><u><span class="parameter">eraseId</span> <i>(optional, multiple)</i></u>:
+When this parameter is set with an identifier (workflow Ids, qualified example Ids, qualified enaction Ids, qualified snapshot Ids), <span class="frontend">workflowmanager</span> frontend disposes all the resources associated to the element labeled with that identifier before returning the workflow repository status. This parameter can be set many times, doing all the erasing operations at once.
+</li>
+<li><u><span class="parameter">autoUUID</span> <i>(optional)</i></u>:
+When this parameter is set, <span class="frontend">workflowmanager</span> frontend uses it as automatable authentication token. This token has some different meanings, because it can be the one from a trusted user so it adds workflows, or from a trusted owner of something which is going to be erased.
+</li>
+<li><u><span class="parameter">workflowRef</span> <i>(optional)</i></u>: This parameter was designed to upload new workflows by reference, usually from other repositories. This parameter must be either a valid internal or external workflow Id, a valid qualified enaction Id or a valid qualified snapshot Id associated to the corresponding resource in the workflow repository. If you want to upload a workflow by content, then <span class="parameter">workflow</span> parameter must be used.
+</li>
+<li><u><span class="parameter">workflow</span> and <span class="parameter">workflowDep</span> <i>(optional, multiple)</i></u>:
+These parameters were designed to upload new workflows to the workflow repository. So, the best enviroment to use them is in a POST transfer, in multipar/form-data style, optionally transferring them as files. <span class="parameter">workflow</span> parameters represent the workflows to be added, in <a href="http://www.mygrid.org.uk/usermanual1.7/scufl_language_wb_features.html">Taverna SCUFL format</a>. As any of the uploaded workflows can have locally referenced dependencies, <span class="parameter">workflowDep</span> parameters can be used to upload those local dependencies along with the workflows to upload. This step is not needed when there is no external dependency (i.e. the dependencies are already embedded in the workflows), or the dependencies are referenced with HTTP, HTTPS or FTP urls. The workflow addition operation is not effective until it is confirmed (see <span class="frontend"><a href="#IWWEMconfirm">IWWEMconfirm</a></span> and <span class="parameter">responsibleMail</span> parameter).
+</li>
+<li><u><span class="parameter">freezeWorkflowDeps</span> <i>(optional)</i></u>:
+If this parameter is set, then any workflow dependency on external workflows which is found is substituted by the content of the reference workflow.
+</li>
+<li><u><span class="parameter">responsibleMail</span> and <span class="parameter">responsibleName</span><i>(optional)</i></u>:
+Parameter <span class="parameter">responsibleMail</span> must be set with a valid e-mail address when optional <span class="parameter">workflow</span> parameter is set, because it is the e-mail address of the responsible person of the workflow (different from the workflow author).
+Parameter <span class="parameter">responsibleName</span> can be set to the name of the responsible person of the workflow to be inserted.
+</li>
+<li><u><span class="parameter">licenseURI</span> and <span class="parameter">licenseName</span><i>(optional)</i></u>:
+Parameter <span class="parameter">licenseURI</span> should be set with a valid URI pointing to a license document when optional <span class="parameter">workflow</span> parameter is set, because it is the URI of the document where the distribution and manipulation rights of the workflow are described.
+Parameter <span class="parameter">licenseName</span> can be set to a common abbreviated name used to tell about the license model.
+</li>
+<li><u><span class="parameter">dataIsland</span> <i>(optional, either <span class="value">1</span> or <span class="value">2</span>)</i></u>:
+When this parameter is set to <span class="value">1</span> or <span class="value">2</span>, the workflow repository report is returned embedded in an <a href="http://www.devarticles.com/c/a/XML/The-Why-and-How-of-XML-Data-Islands/">XML data island</a>.
+This parameter was created because AJAX GUIs running on some browsers (like Konqueror or old Internet Explorer versions) cannot
+parse pure XML loaded in embedded FRAMEs or IFRAMEs due browser limitations. When the parameter is <span class="value">1</span>, the content is wrapped
+by an <tt>xml</tt> tag (for Internet Explorer), and when parameter is <span class="value">2</span>, the content is wrapped by a <tt>div</tt> tag
+(for Konqueror).
+</li>
+<li><u><span class="parameter">altViewerURI</span> <i>(optional)</i></u>: When a workflow is added,this parameter allows customizing the enaction viewer URI to use when an enaction is run. The URI can optionally contain the particle @JOBID@, so IWWE&amp; core knows where to put the job id when it has to build a GUI enaction URI.
+</li>
+</ul>
+
+<hr>
+
+<div align="center"><h2><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB" title="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a>: <a name="enactionlauncher"><span class="frontend">enactionlauncher</span></a> frontend documentation and call parameters</h2></div>
+
+<div align="justify">
+<p>The <span class="frontend">enactionlauncher</span> frontend module is used to start an enaction process over a given input workflow or a previously stored one. As any program based on <a href="http://taverna.sourceforge.net/">Taverna</a> core uses lots of resources for any enaction process, <span class="frontend">enactionlauncher</span> must restrict the number of concurrent enaction instances, queuing further queries until an enaction slot is available for each one.</p>
+<p>In any case, <span class="frontend">enactionlauncher</span> builds up the input parameters for INBWorkflowLauncherWrapper, and
+it also manages the creation and usage of example inputs. Also, <span class="frontend">enactionlauncher</span> must create both the
+job identifier returned and the infrastructure needed by <a href="#enactionstatus"><span class="frontend">enactionstatus</span></a>
+module and INBWorkflowLauncherWrapper backend program. This job identifier is returned in XML format, which follows
+the XML Schema defined at <a href="IWWEM-messages.xsd">IWWEM-messages.xsd</a> and described
+at <a href="IWWEM-messages.xsd.html">IWWEM-messages.xsd.html</a>.</p>
+</div>
+
+<h3>Call parameters</h3>
+
+<ul>
+<li><u><span class="parameter">dataIsland</span> <i>(optional, either <span class="value">1</span> or <span class="value">2</span>)</i></u>:
+When this parameter is set to <span class="value">1</span> or <span class="value">2</span>, the enaction launcher report is returned embedded in an <a href="http://www.devarticles.com/c/a/XML/The-Why-and-How-of-XML-Data-Islands/">XML data island</a>.
+This parameter was created because AJAX GUIs running on some browsers (like Konqueror or old Internet Explorer versions) cannot
+parse pure XML loaded in embedded FRAMEs or IFRAMEs due browser limitations. When the parameter is <span class="value">1</span>, the content is wrapped
+by an <tt>xml</tt> tag (for Internet Explorer), and when parameter is <span class="value">2</span>, the content is wrapped by a <tt>div</tt> tag
+(for Konqueror).
+</li>
+<li><u><span class="parameter">workflowRef</span> or its alias <span class="parameter">id</span> <i>(required)</i></u>: This parameter must be either a valid internal or external workflow Id, a valid qualified enaction Id or a valid qualified snapshot Id associated to the corresponding resource in the workflow repository. If this parameter is not used, then <span class="parameter">workflow</span> parameter must be used.
+</li>
+<li><u><span class="parameter">reusePrevInput</span> <i>(optional)</i></u>: When <span class="parameter">id</span> parameter is either a qualified enaction Id or a qualified snapshot Id, this parameter is set and no other input has been sent, the input from previous enaction or snapshot is reused. Otherwise, it is ignored.
+</li>
+<li><u><span class="parameter">workflow</span> and <span class="parameter">workflowDep</span> <i>(optional, multiple)</i></u>:
+These parameters were designed to upload new workflows to the workflow repository. So, the best enviroment to use them is in a POST transfer, in multipar/form-data style, optionally transferring them as files. <span class="parameter">workflow</span> parameters represent the workflows to be added, in <a href="http://www.mygrid.org.uk/usermanual1.7/scufl_language_wb_features.html">Taverna SCUFL format</a>. As any of the uploaded workflows can have locally referenced dependencies, <span class="parameter">workflowDep</span> parameters can be used to upload those local dependencies along with the workflows to upload. This step is not needed when there is no external dependency (i.e. the dependencies are already embedded in the workflows), or the dependencies are referenced with HTTP, HTTPS or FTP urls.
+</li>
+<li><u><span class="parameter">BACLAVA_FILE</span> <i>(optional, multiple)</i></u>: This parameter is used to set input values for the enaction process as a whole. This parameter can be used in two different ways: when this parameter has been passed as a value, then its content is interpreted as the identifier (either qualified or unqualified) of an input example associated to the workflow identified by the <span class="parameter">id</span> parameter; when this parameter has been passed using a POST transfer in multipart/form-data style and it has been marked as a file, then its value is interpreted as the raw content of a Baclava-formatted file.
+</li>
+<li><u><span class="parameter">PARAM_</span> prefixed parameters <i>(optional, multiple)</i></u>: These parameters are used to set values for the inputs of the workflow to be enacted. The text after the <span class="parameter">PARAM_</span> prefix sets the name of the input to be assigned. As <span class="parameter">BACLAVA_FILE</span> parameter, these parameters can be used in two different ways: when any of these parameters has been passed as a value, then its content is interpreted as the raw value; when this parameter has been passed using a POST transfer in multipart/form-data style and it has been marked as a file, then the content of this transferred file is interpreted as the raw content assigned to the parameter.
+</li>
+<li><u><span class="parameter">ENCODING_</span> prefixed parameters <i>(optional, multiple)</i></u>: These parameters are used to tell the encodings of the values for the inputs of the workflow to be enacted, and they must be legal ones. They way to tell that an input is binary is using the illegal encoding <span class="value">"binary"</span>. The text after the <span class="parameter">ENCODING_</span> prefix sets the name of the input to be assigned to. If there is no prefixed <span class="parameter">PARAM_</span> parameter corresponding to an encoding one, then it is discarded. If there is no prefixed <span class="parameter">ENCODING_</span> parameter corresponding to a parameter one, then it is assumed that its encoding is UTF-8.
+</li>
+<li><u><span class="parameter">MIME_</span> prefixed parameters <i>(optional, multiple)</i></u>: These parameters are used to tell the MIME types of the values for the inputs of the workflow to be enacted, and they should be legal ones. The text after the <span class="parameter">MIME_</span> prefix sets the name of the input to be assigned to. If there is no prefixed <span class="parameter">PARAM_</span> parameter corresponding to a MIME type one, then it is discarded. Other supplementary way to send a MIME type is through the Content-Type header associated to a file transfer in multipart/form-data style.
+</li>
+<li><u><span class="parameter">exampleName</span> and <span class="parameter">exampleDesc</span> <i>(optional)</i></u>: These parameters are used to save and describe the input to this workflow enaction as an input example associated to the original workflow. These parameters do not work with inline workflow definitions. <span class="parameter">exampleName</span> has no restrictions in its value, and at the moment it should be encoded in UTF-8. <span class="parameter">exampleDesc</span> is the description of the input example which is being created, and it can be HTML content (also encoded in UTF-8). The example addition operation is not effective until it is confirmed (see <span class="frontend"><a href="#IWWEMconfirm">IWWEMconfirm</a></span> and <span class="parameter">responsibleMail</span> parameter). Current behavior is that when an example is saved, no workflow enaction is issued (and so <span class="parameter">onlySaveAsExample</span> <b>is deprecated</b>).
+</li>
+<li><u><span class="parameter">responsibleMail</span> and <span class="parameter">responsibleName</span><i>(optional)</i></u>:
+Parameter <span class="parameter">responsibleMail</span> must be set with a valid e-mail address when optional <span class="parameter">exampleName</span> parameter is set, because it is the e-mail address of the responsible person of the example (different from the workflow author and workflow responsible).
+An e-mail is sent to the responsible person when enaction is just starting and when enaction has just finished. Parameter <span class="parameter">responsibleName</span> can be set to the name of the responsible person of the example to be inserted.
+</li>
+<li><u><span class="parameter">autoUUID</span> <i>(optional)</i></u>:
+When this parameter is set, <span class="frontend">enactionlauncher</span> frontend uses it as automatable authentication token. This token has some different meanings, because it can be the one from a trusted user so it adds examples.
+</li>
+<li><u><span class="parameter">onlySaveAsExample</span> <i>(optional, deprecated)</i></u>: When <span class="parameter">exampleName</span> is set, <span class="parameter">id</span> parameter is a workflow Id, a qualified enaction Id or a qualified snapshot Id, and this parameter is set, only save parameters stage is done and no enaction process is issued.
+</li>
+<li><u><span class="parameter">altViewerURI</span> <i>(optional)</i></u>: When a job is launched, an e-mail with the URL to the enaction viewer is sent. This parameter allows customizing that enaction viewer URI just for this run. The URI can optionally contain the particle @JOBID@, so IWWE&amp; core knows where to put the job id when it has to build a GUI enaction URI.
+</li>
+</ul>
+
+<hr>
+<div align="center"><h2><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB" title="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a>: <a name="enactionstatus"><span class="frontend">enactionstatus</span></a> frontend documentation and call parameters</h2></div>
+
+<div align="justify">
+<p>The frontend module <span class="frontend">enactionstatus</span> reports the status of an in-course or finished enaction.
+It reports the available inputs and outputs for the whole enaction process and any of its steps, and it also
+reports the same information for any of the iterations of any workflow step. Additional information, like if
+an step has started, is iterating, has finished or has failed is also provided. All this information is described
+in an XML format which follows the XML Schema defined at
+<a href="IWWEM-messages.xsd">IWWEM-messages.xsd</a> and described
+at <a href="IWWEM-messages.xsd.html">IWWEM-messages.xsd.html</a>.</p>
+
+<p>This frontend module is also responsible of new enaction snapshots creation, the kill of in-course jobs and the disposal of
+enactions and enaction snapshots.</p>
+</div>
+
+<h3>Call parameters</h3>
+
+<ul>
+<li><u><span class="parameter">jobId</span> <i>(required)</i></u>:
+<span class="frontend">enactionstatus</span> frontend needs either an enaction job identifier (either qualified or unqualified) or a qualified snapshot identifier.
+</li>
+<li><u><span class="parameter">dispose</span> <i>(optional, either <span class="value">0</span> or <span class="value">1</span>)</i></u>:
+If this parameter is set to <span class="value">0</span>, the enaction process is killed (if it is still running).
+<br>If this parameter is set to <span class="value">1</span>, the server resources used by the job or snapshot identified
+with the <span class="parameter">jobId</span> parameter are reclaimed and freed.
+</li>
+<li><u><span class="parameter">snapshotName</span> and <span class="parameter">snapshotDesc</span> <i>(optional)</i></u>:
+These parameters are used to take, name and describe an snapshot. An snapshot of an snapshot <u>cannot</u>
+be taken. <span class="parameter">snapshotName</span> has no restrictions in its value, and at the moment it should be encoded in UTF-8.
+<span class="parameter">snapshotDesc</span> is the description of the snapshot, and it can be HTML content (also encoded in UTF-8). The snapshot addition operation is not effective until it is confirmed (see <span class="frontend"><a href="#IWWEMconfirm">IWWEMconfirm</a></span> and <span class="parameter">responsibleMail</span> parameter).
+</li>
+<li><u><span class="parameter">responsibleMail</span> and <span class="parameter">responsibleName</span><i>(optional)</i></u>:
+Parameter <span class="parameter">responsibleMail</span> must be set with a valid e-mail address when optional <span class="parameter">snapshotName</span> parameter is set, because it is the e-mail address of the responsible person of the snapshot (different from the enaction responsible).
+Parameter <span class="parameter">responsibleName</span> can be set to the name of the responsible person of the snapshot to be inserted.
+</li>
+<li><u><span class="parameter">autoUUID</span> <i>(optional)</i></u>:
+When this parameter is set, <span class="frontend">enactionstatus</span> frontend uses it as automatable authentication token. This token has some different meanings, because it can be the one from a trusted user so it adds snapshots, or from a trusted owner of something which is going to be disposed.
+</li>
+</ul>
+
+<hr>
+<div align="center"><h2><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB" title="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a>: <a name="IWWEMproxy"><span class="frontend">IWWEMproxy</span></a> frontend documentation and call parameters</h2></div>
+
+<div align="justify">
+<p>This frontend module was created to overcome some of the limitations of current browsers. Enaction process launched with <span class="frontend"><a href="#enactionlauncher">enactionlauncher</a></span> save both inputs and ouputs of the whole process, intermediate steps and iterations in Baclava XML format. <a href="../enactionviewer.html">AJAX GUI Enaction Viewer</a> allows the end user to browse this information, but some data viewers it uses are only able to handle information coming from an URL. <span class="frontend">IWWEMproxy</span> is responsible of decoding, extracting and streaming this information under demand. Data bundles can be accessed in listing or raw modes when <span class="parameter">bundle64</span> and <span class="parameter">IOPath</span> parameters are unset. Data bundles listing shows the backbone of the data bundle (i.e. its tree structure), meanwhile raw mode access gives full access to the raw storage format (Baclava).
+</div>
+
+<h3>Call parameters</h3>
+
+<ul>
+<li><u><span class="parameter">jobId</span> <i>(required)</i></u>:
+<span class="frontend">IWWEMproxy</span> frontend needs either a qualified or unqualified enaction job identifier, a qualified snapshot identifier or a qualified example identifier in order to work and know where to find the information to decode, extract and stream.
+</li>
+<li><u><span class="parameter">asMime</span> <i>(required)</i></u>:
+The value of this parameter sets the MIME type used to label the streamed information, so HTTP clients (web browsers, GUIs) are able to select a viewer or a program to use based on it. It is ignored when <span class="parameter">bundle64</span> and <span class="parameter">IOPath</span> are unset.
+</li>
+<li><u><span class="parameter">charset</span> <i>(optional)</i></u>:
+The value of this parameter sets the charset of the streamed information, so HTTP clients (web browsers, GUIs) are able to see it properly. It is ignored when <span class="parameter">bundle64</span> and <span class="parameter">IOPath</span> are unset.
+</li>
+<li><u><span class="parameter">withName</span> <i>(optional)</i></u>:
+The value of this parameter sets the suggested name for the streamed content when it is going to be saved by a web browser. If this parameter is set to the empty string, the suggested name is derived from the input parameters.
+</li>
+<li><u><span class="parameter">bundle64</span> <i>(optional)</i></u>:
+When this parameter is set, then the information to decode, extract and stream comes from its value.
+</li>
+</ul>
+
+If <span class="parameter">bundle64</span> is not set, then information needed to fetch and decode is given by next parameters:
+
+<ul>
+<li><u><span class="parameter">step</span> <i>(optional)</i></u>:
+The name of the workflow step which took this input or generated this output. This only make sense for enaction job identifiers and snapshot identifiers, when the information from a concrete step is being fetched.
+</li>
+<li><u><span class="parameter">iteration</span> <i>(optional)</i></u>:
+If we have set the workflow step and the workflow step iterated, the iteration number. Otherwise, the whole step is taken into account.
+</li>
+<li><u><span class="parameter">IOMode</span> <i>(optional, either <span class="value">I</span>, <span class="value">O</span> or <span class="value">B</span>)</i></u>:
+This parameter only makes sense with enaction job and snapshot identifiers. If this parameter is set to <span class="value">I</span>, then <span class="parameter">IOPath</span> is referring to an input. If this parameter is set to <span class="value">O</span>, then <span class="parameter">IOPath</span> is referring to an output. Parameter can only be set to <span class="value">B</span> when <span class="frontend">IWWEMproxy</span> is used either in listing or raw modes.
+</li>
+<li><u><span class="parameter">raw</span> <i>(optional)</i></u>:
+When requested information is in list mode, this parameter switches to its raw representation.
+</li>
+<li><u><span class="parameter">IOPath</span> <i>(required)</i></u>:
+The virtual path to reach the value to return. These paths are similar to:
+<ul>
+<li><span class="value">gene_input</span>: An input (or output) with the name <span class="value">gene_input</span> and a single value</li>
+<li><span class="value">Genes/17/0</span>: An input (or output) with the name <span class="value">Genes</span> and a set of values. We are getting value <span class="value">0</span> from subset <span class="value">17</span> from <span class="value">Genes</span>. The number of nested subsets depend on the data structure</li>
+<li><span class="value">PDB_Enriched(structure)/#EnrichedPDB[0]</span>: An input (or output) with the name <span class="value">PDB_Enriched(structure)</span> and a single value, which has an interesting result identified and extracted by <span class="value">EnrichedPDB</span> pattern. The value which is returned is the result <span class="value">0</span> obtained when <span class="value">EnrichedPDB</span> pattern is applied to <span class="value">PDB_Enriched(structure)</span>.</li>
+</ul>
+</li>
+Characters '<span class="value">#</span>' (virtual step), '<span class="value">/</span>' (step separator) and '<span class="value">&amp;</span>' have special meanings. If any step in the <span class="parameter">IOPath</span> contains any of these characters,
+you must substitute occurrences of '<span class="value">#</span>' with '<span class="value">&amp;#35;</span>' or '<span class="value">&amp;#x23;</span>', '<span class="value">/</span>' with '<span class="value">&amp;#47;</span>' or '<span class="value">&amp;#x2F;</span>', and '<span class="value">&amp;</span>' with '<span class="value">&amp;amp;</span>'.
+</ul>
+
+Patterns used in <span class="parameter">IOPath</span> parameter are stored in the IWWE&amp;M server in an XML document, which follows the XML Schema <a href="IWWEM-patterns.xsd">IWWEM-patterns.xsd</a> (<a href="IWWEM-patterns.xsd.html">documentation</a>). Currently defined global patterns are available at <a href="../etc/EVpatterns.xml">EVpatterns.xml</a>
+
+<hr>
+<a name="IWWEMconfirm"><div align="center"><h2><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB" title="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a>: <span class="frontend">IWWEMconfirm</span> frontend documentation and call parameters</h2></div></a>
+
+<div align="justify">
+<p>This frontend module is used as an operations confirmation proxy. All erasing operations requested using <span class="frontend"><a href="#workflowmanager">workflowmanager</a></span> (workflows, examples, snapshots and enactions),
+and the addition operations from <span class="frontend"><a href="#workflowmanager">workflowmanager</a></span> (workflows), <span class="frontend"><a href="#enactionlauncher">enactionlauncher</a></span> (examples) and <span class="frontend"><a href="#enactionstatus">enactionstatus</a></span> (snapshots) must be confirmed by the end user before being effective. So, these frontends use <span class="parameter">responsibleMail</span> parameter to send e-mails to the responsible people of the object to be added/removed, which contain an URL to this frontend. When the URL is visited, the operation is just made effective.
+</div>
+
+<h3>Call parameter</h3>
+
+<ul>
+<li><u><span class="parameter">code</span> <i>(required)</i></u>: The confirmation Id, or code, which confirms the operation.
+</li>
+<li><u><span class="parameter">reject</span> <i>(optional)</i></u>: If it is set, the actions of the operation are rejected.
+</li>
+</ul>
+
+<hr>
+<a name="IWWEMfs"><div align="center"><h2><a href="http://www.inab.org/"><img src="../style/logo-inb-small.png" alt="INB" title="INB"></a> <a href="http://ubio.bioinfo.cnio.es/biotools/IWWEM">IWWE&amp;M</a>: <span class="frontend">IWWEMfs</span> frontend documentation and call parameters</h2></div></a>
+
+<div align="justify">
+<p>This frontend module was created to give path-like access to almost all the information stored and provided by IWWE&amp;M server.
+So, it provides almost all the information you can fetch using <span class="frontend"><a href="#workflowmanager">workflowmanager</a></span>
+(available workflows and enactions), <span class="frontend"><a href="#enactionstatus">enactionstatus</a></span> (enaction and snapshot status)
+and <span class="frontend"><a href="#IWWEMproxy">IWWEMproxy</a></span> (access to workflow examples content, and inputs and results from enactions
+and snapshots), including single files like workflow graphs or raw workflow definitions.
+</p>
+</div>
+
+<h3>Call parameters</h3>
+<p>This module reuses parameters <span class="parameter">asMime</span>, <span class="parameter">charset</span> and <span class="parameter">withName</span>
+from <span class="frontend"><a href="#IWWEMproxy">IWWEMproxy</a></span>, and reuses the semantics of the content of <span class="parameter">IOPath</span>
+from <span class="frontend"><a href="#IWWEMproxy">IWWEMproxy</a></span> when an input or an output is being fetched.</p>
+
+<ul>
+<li><u><span class="parameter">digested</span> <i>(optional)</i></u>:
+When requested Input/Output information is in raw mode, this parameter switches to its digested (listing) representation.
+</li>
+</ul>
+
+<p>As this module works in a seamless way with virtual paths, next ones are relative sample URIs with valid paths:</p>
+<ul>
+<li><span class="value">IWWEMfs/workflows</span> (detailed list of available workflows)</li>
+<li><span class="value">IWWEMfs/workflows/a04fe33d-4496-415b-a6ef-8b92559160f0/workflow.svg</span> (SVG graph representation of a concrete workflow)</li>
+<li><span class="value">IWWEMfs/workflows/a04fe33d-4496-415b-a6ef-8b92559160f0/workflow.xml</span> (Taverna representation of a concrete workflow)</li>
+<li><span class="value">IWWEMfs/workflows/a04fe33d-4496-415b-a6ef-8b92559160f0/examples/fc4756c6-c7fa-4237-9fb3-4ab03895d075.xml</span> (An example in Baclava format)</li>
+<li><span class="value">IWWEMfs/enactions</span> (detailed list of available enactions, as workflows)</li>
+<li><span class="value">IWWEMfs/enactions/87f3c937-a822-41fa-9749-93efd6f9eeb7</span> (detailed status of an enaction)</li>
+<li><span class="value">IWWEMfs/enactions/87f3c937-a822-41fa-9749-93efd6f9eeb7/Outputs.xml</span> (outputs in Baclava format)</li>
+<li><span class="value">IWWEMfs/enactions/87f3c937-a822-41fa-9749-93efd6f9eeb7/Results/getSymbolInteractions/Inputs.xml/Object(search)</span>
+<br>(value of one of the inputs to <span class="value">getSymbolInteractions</span> enaction step)</li>
+<li><span class="value">IWWEMfs/enactions/87f3c937-a822-41fa-9749-93efd6f9eeb7/Results/extractSymbols/Iterations/0000/Outputs.xml?digested=1</span>
+<br>(listing of available outputs from iteration <span class="value">0000</span> from enaction step <span class="value">extractSymbols</span>)</li>
+</ul>
+<hr>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" class="ccimg" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png"></a><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type" style="font-style:italic;"> "INB IWWE&amp;M frontends call parameters"</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://ubio.bioinfo.cnio.es/biotools/IWWEM/workflowmanager.html" property="cc:attributionName" rel="cc:attributionURL">Jos&#233; Mar&#237;a Fern&#225;ndez Gonz&#225;lez</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported License</a>.<br />Based on a work stored at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://trac.bioinfo.cnio.es/trc/iwwem" rel="dc:source">IWWE&amp;M Trac Server</a>.
+</body>
+</html>

@@ -1,0 +1,251 @@
+@charset "UTF-8";
+
+/*
+	$Id$
+	IWWEM-buttons.css
+	from INB Interactive Web Workflow Enactor & Manager (IWWE&M)
+	Author: José María Fernández González (C) 2007-2008
+	Institutions:
+	*	Spanish National Cancer Research Institute (CNIO, http://www.cnio.es/)
+	*	Spanish National Bioinformatics Institute (INB, http://www.inab.org/)
+	
+	This file is part of IWWE&M, the Interactive Web Workflow Enactor & Manager.
+
+	IWWE&M is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	IWWE&M is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with IWWE&M.  If not, see <http://www.gnu.org/licenses/agpl.txt>.
+
+	Original IWWE&M concept, design and coding done by José María Fernández González, INB (C) 2008.
+	Source code of IWWE&M is available at http://trac.bioinfo.cnio.es/trac/iwwem
+*/
+/* INB Web Workflow Launcher Buttons CSS */
+
+/* Some changes have been made to meet Internet Explorer impairness */
+/* about handling multiple classes restriction */
+
+.button, .buttondisabled, .button td .buttondisabled td {
+	text-align: center;
+ 	vertical-align: middle;
+	color: black;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 15px;
+	white-space: nowrap;
+	-moz-user-select: none;
+}
+
+.button , .buttondisabled {
+	/* Standard classes */
+	width: 135px;
+	height: 45px;
+	padding: 10px;
+	
+	background-position: center center;
+	background-repeat: no-repeat;
+	
+	display: table-cell;
+	/*
+	background-color: gray;
+	border: 1px solid black;
+	*/
+}
+
+.button {
+	/* Black IE magic */
+	behavior: url(style/hover.htc);
+	
+	background-image: url(button3-inactive.png);
+	cursor: pointer;
+}
+
+/* Button disabled .buttondisabled */
+.buttondisabled {
+	background-image: url(button3-disabled.png);
+}
+
+.button img , .buttondisabled img {
+	vertical-align: middle;
+}
+
+.buttonhover , div.button:hover , span.button:hover {
+	background-image: url(button3-hover.png);
+}
+
+.buttonactive , div.button:active , span.button:active {
+	background-image: url(button3-active.png);
+}
+
+/* Button back .button.back */
+.back {
+	position: absolute;
+	margin-left: 10px;
+	left: 5%;
+	bottom: 6%;
+}
+
+/* Button forward .button.forward */
+.forward {
+	position: absolute;
+	margin-right: 10px;
+	right: 5%;
+	bottom: 6%;
+}
+
+/* For trees (old) */
+span.plus , span.minus {
+	width: 9px;
+	height: 9px;
+	padding-left: 10px;
+	
+	background-position: center left;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	
+	text-align: center;
+	white-space: nowrap;
+ 	vertical-align: middle;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 14px;
+}
+
+span.plus {
+	background-image: url(twisty-clsd.png);
+}
+
+/* This one was .plus.minus */
+span.minus {
+	background-image: url(twisty-open.png);
+}
+
+/* Dynamic add/remove */
+span.add , span.remove {
+	width: 20px;
+	height: 20px;
+	padding-left: 22px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	
+	background-position: center left;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	
+	text-align: center;
+	white-space: nowrap;
+ 	vertical-align: middle;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 14px;
+}
+
+span.add {
+	background-image: url(lumen_add.png);
+}
+
+/* This one was .add.remove */
+span.remove {
+	background-image: url(lumen_minus.png);
+}
+
+span.magglass {
+	width: 20px;
+	height: 20px;
+	padding-left: 20px;
+	
+	background-image: url(magglass.png);
+	background-position: center left;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	
+	text-align: center;
+	white-space: nowrap;
+ 	vertical-align: middle;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 20px;
+}
+
+span.radio , span.checkbox {
+	height: 16px;
+	/*
+	width: 16px;
+	*/
+	margin: 2px 2px 2px 2px;
+	text-align: left;
+	white-space: nowrap;
+ 	vertical-align: middle;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 14px;
+}
+
+span.radio , span.checkbox {
+	/* Black IE magic */
+	/*
+	behavior:url(hover.htc);
+	*/
+	
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+span.radio {
+	background-image: url(radio.png);
+}
+
+span.checkbox {
+	background-image: url(checkbox.png);
+}
+
+/* This one was .radio.left .checkbox.left */
+span.left {
+	padding-left: 17px;
+	background-position: center left;
+}
+
+/* This one was .radio.right .checkbox.right */
+span.right {
+	padding-right: 17px;
+	background-position: center right;
+}
+
+span.radiohover , span.radio:hover {
+	background-image: url(radio-focus.png);
+}
+
+/* This one was span.radio.checked , span.radio.left.checked , span.radio.right.checked */
+span.radiochecked , span.radiocheckedhover , span.radiochecked:hover {
+	background-image: url(radio-checked.png);
+}
+
+span.checkboxbluehover , span.checkboxblue:hover {
+	background-image: url(checkbox-focus.png);
+}
+
+span.checkboxbluechecked , span.checkboxbluecheckedhover, span.checkboxbluechecked:hover {
+	background-image: url(checkbox-checked.png);
+}
+
+span.checkboxredhover , span.checkboxred:hover {
+	background-image: url(checkbox-red-focus.png);
+}
+
+span.checkboxredchecked , span.checkboxredcheckedhover, span.checkboxredchecked:hover {
+	background-image: url(checkbox-red-checked.png);
+}
+
+span.checkboxgreenhover , span.checkboxgreen:hover {
+	background-image: url(checkbox-green-focus.png);
+}
+
+span.checkboxgreenchecked , span.checkboxgreencheckedhover , span.checkboxgreenchecked:hover {
+	background-image: url(checkbox-green-checked.png);
+}
+
+span.checkboxred , span.checkboxgreen , span.checkboxblue, span.radio {
+	behavior:  url(style/hover.htc);
+}

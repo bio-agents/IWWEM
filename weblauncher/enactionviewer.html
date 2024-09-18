@@ -1,0 +1,159 @@
+<html>
+<head>
+	<title>INB Interactive Web Workflow Enaction Viewer (loading)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<!--
+		$Id$
+		enactionviewer.html
+		from INB Interactive Web Workflow Enactor & Manager (IWWE&M)
+		Author: José María Fernández González (C) 2007-2008
+		Institutions:
+		*	Spanish National Cancer Research Institute (CNIO, http://www.cnio.es/)
+		*	Spanish National Bioinformatics Institute (INB, http://www.inab.org/)
+
+		This file is part of IWWE&M, the Interactive Web Workflow Enactor & Manager.
+
+		IWWE&M is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Affero General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		IWWE&M is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Affero General Public License for more details.
+
+		You should have received a copy of the GNU Affero General Public License
+		along with IWWE&M.  If not, see <http://www.gnu.org/licenses/agpl.txt>.
+
+		Original IWWE&M concept, design and coding done by José María Fernández González, INB (C) 2008.
+		Source code of IWWE&M is available at http://trac.bioinfo.cnio.es/trac/iwwem
+	-->
+	
+	<link rel="shortcut icon" href="style/IWWEM-favicon.ico" type="image/vnd.microsoft.icon">
+	<link rel="icon" href="style/IWWEM-favicon.ico" type="image/vnd.microsoft.icon">
+	
+	<link rel="stylesheet" type="text/css" href="js/prettify/prettify.css">
+	
+	<link rel="stylesheet" type="text/css" href="style/IWWEM-styles.css">
+	
+	<link rel="stylesheet" type="text/css" href="style/IWWEMprettyXML/viewsource.css">
+	<link rel="stylesheet" type="text/css" href="style/IWWEMprettyXML/XMLPrettyPrint.css">
+	<link title="Monospace" rel="alternate stylesheet" type="text/css" href="style/IWWEMprettyXML/XMLMonoPrint.css">
+
+	<script type="text/javascript" src="js/ORFandDB-widgetCommon/browserdetect/BrowserDetect.js"></script>
+
+	<script type="text/javascript" language="JavaScript" src="js/adobesvgcheck/svgcheck.js"></script>
+	<script type="text/vbscript" language="VBScript" src="js/adobesvgcheck/svgcheck.vbs"></script>
+	<script type="text/javascript" language="JavaScript"><!--
+if(BrowserDetect.browser=='Explorer') {
+	checkAndGetSVGViewer();
+}
+// -->
+	</script>
+
+	<script type="text/javascript" src="js/ORFandDB-widgetCommon/widgetCommon.js"></script>
+	
+	<script type="text/javascript" src="etc/IWWEM-config.js"></script>
+	
+	<script type="text/javascript" src="js/IWWEM-common.js"></script>
+	
+	<script type="text/javascript" src="js/enactionviewer.js"></script>
+</head>
+<body onload="InitIWWEM(EnactionViewerCustomInit,ENDEPS)" onunload="DisposeIWWEM(EnactionViewerCustomDispose)">
+	<div style="width:100%;height:90%;">
+	<table align="center" style="height:98%;width:98%;table-layout:fixed;"><tbody style="height:90%;width:98%;table-layout:fixed;">
+		<tr class="header"><td colspan="6" align="center">
+			<a href="http://www.inab.org/"><img src="style/inb-logo-tiny.png" style="vertical-align:middle" alt="INB" title="INB" border="0"></a> <b id="titleB">Interactive Web Workflow Enaction Viewer <i><blink>(loading)</blink></i></b>
+		</td></tr>
+		<tr class="header"><td colspan="2">
+			<u>Report date</u>: <span id="dateSpan"><i>(empty)</i></span><br>
+			<u>Responsible</u>: <span id="responsibleSpan"><i>(empty)</i></span><br>
+			<u>General status</u>: <span id="generalStatusSpan"><marquee behavior="alternate" loop="-1" style="display:inline;"><font color="violet"><b><blink>loading application</blink></b></font> <img src="style/ajaxLoader.gif"></marquee></span>
+		</td><td colspan="2">
+			<u>Workflow</u>: <span id="wfTitleSpan"></span><br>
+			<u>Step</u>: <span id="stageSpan"></span><br>
+			<u>State</u>: <span id="stageStateSpan"></span>
+		</td><td colspan="2" id="mimeInfoSelect">
+		</td></tr>
+		<tr><td colspan="2" class="equal">
+			<div class="svgdiv" id="svgdiv"></div>
+			<!--<select name="workflow" id="workflow" style="width:230px;" size="20"></select>-->
+		</td><td colspan="2" class="equal">
+			<div class="scrolldatawide" id="dataTreeDiv"></div>
+		</td><td colspan="2" class="equal" align="center" valign="top">
+			<div id="databrowser" class="scroll"></div>
+		</td></tr>
+		<tr><td colspan="6" align="right">
+			<span id="confirm" class='checkboxred checkbox right'>Confirm</span>
+		</td></tr>
+		<tr><td class="buttons" align="center">
+			<div id="reloadButton" class="button"><span id="updateTextSpan">Update</span> <img src="style/reload.png"></div>
+		</td><td class="buttons" align="center">
+			<div class="button" onclick="genview.enactview.openOtherEnactionFrame()">Open enaction<img src="style/blueplus.png"></div>
+		</td><td class="buttons" align="center">
+			<div id="snapButton" class="button">Snapshot <img src="style/snapshot.png"></div>
+		</td><td class="buttons" align="center">
+			<div id="relaunchButton" class="button">Relaunch!<img src="style/regreenball.png"></div>
+		</td><td class="buttons" align="center">
+			<div id="killButton" class="button">Kill Job <img src="style/skull.png"></div>
+		</td><td class="buttons" align="center">
+			<div id="disposeButton" class="button">Dispose <img src="style/recycle.png"></div>
+		</td></tr>
+	<!-- Messages table -->
+		<tr class="message"><td colspan="6" style="overflow:auto">
+			<p><u>Last operation message</u></p>
+			<div id="messageDiv"></div>
+		</td></tr>
+	</tbody></table>
+	</div>
+	<div class="license">IWWE&amp;M code is under <a target="_blank" href="http://www.gnu.org/licenses/agpl.html"><img src="licenses/agplv3-88x31.png" style="vertical-align:middle" alt="AGPLv3" title="AGPLv3" border="0"></a> license. Source code is available at <a target="_blank" href="http://trac.bioinfo.cnio.es/trac/iwwem">IWWE&amp;M Trac server</a>.<br>Original IWWE&amp;M concept, design and coding done by Jos&eacute; Mar&iacute;a Fern&aacute;ndez, <a target="_blank" href="http://www.inab.org/">INB</a> (C) 2008-2009.</div>
+<div class="hidden" id="viewOtherEnaction">
+	<div class="secondary secyellow">
+		<form id="formViewEnaction" action="enactionviewer.html" method="get" accept-charset="UTF-8">
+			<table align="center" style="width:98%; height:98%;table-layout:fixed"><tr valign="middle"><td colspan="3" style="width:100%; height:100%">
+				<iframe id="otherEnactionsFrameId" src="about:blank" style="border:0;height:100%;width:100%;overflow:auto"></iframe>
+			</td></tr>
+			<tr valign="middle"><td align="center" style="width:33%">
+				<div class="button" onclick="genview.enactview.closeOtherEnactionFrame()">
+					<img src="style/leftarrow.png"> Back
+				</div>
+			</td>
+			<td align="center">Select the enaction you want to inspect and press 'Inspect It' or introduce your enaction Id by hand and press 'View':<br><input type="text" id="jobId" name="jobId"></input></td>
+			<td align="center" style="width:33%">
+				<div class="button" onclick="genview.enactview.viewEnaction()">
+					View <img src="style/run.png">
+				</div>
+			</td></tr></table>
+		</form>
+	</div>
+</div>
+<div class="hidden" id="snapshotEnaction">
+	<div class="secondary secyellow">
+		<form id="formSnapshotEnaction" target="_blank" accept-charset="UTF-8">
+			<table width="65%" align="center">
+				<tr><td colspan="3" style="text-align:center;"><h2>Taking an snapshot...</h2></td></tr>
+				<tr valign="middle"><td width="33%">Uploader e-mail</td><td align="center" width="33%"><span class="sWf"><input type="text" id="responsibleMail" name="responsibleMail"><img src="style/email_icon2-mini.png"></span></td><td align="right" width="33%"><span style="font-style:italic;color:red">(required)</span></td></tr>
+				<tr valign="middle"><td>Uploader full name</td><td align="center"><span class="sWf"><input type="text" id="responsibleName" name="responsibleName"><img src="style/blueman_108_01-mini.png"></span></td><td align="right"><span style="font-style:italic;color:red">(optional)</span></td></tr>
+				<tr valign="middle"><td>Snapshot Name</td><td align="center"><input id="snapshotName" type="text" name="snapshotName"></td><td align="right"><span style="font-style:italic;color:red">(required)</span></td></tr>
+				<tr><td align="center" colspan="3">
+				<b style="margin-top:50px">Snapshot Description</b><br>
+				<div id="snapshotDescContainer"></div>
+			
+			</td></tr></table>
+		</form>
+		<div class="button back" onclick="genview.enactview.closeSnapshotFrame()">
+			<table style="width:100%; height:100%;margin:0px;padding:0px"><tr valign="middle"><td align="center">
+				<img src="style/leftarrow.png"> Back
+			</td></tr></table>
+		</div>
+		<div class="button forward" onclick="genview.enactview.takeSnapshot()">
+			<table style="width:100%; height:100%;margin:0px;padding:0px"><tr valign="middle"><td align="center">
+				Take snapshot<img src="style/snapshot.png">
+			</td></tr></table>
+		</div>
+	</div>
+</div>
+</body>
+</html>

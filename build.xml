@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	This file is part of IWWE&M, the Interactive Web Workflow Enactor & Manager.
+
+	IWWE&M is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	IWWE&M is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with IWWE&M.  If not, see <http://www.gnu.org/licenses/agpl.txt>.
+
+	Original IWWE&M concept, design and coding done by José María Fernández González, INB (C) 2008-2011.
+	Source code of IWWE&M is available at http://trac.bioinfo.cnio.es/trac/iwwem
+-->
+<project basedir="." default="compile" name="inb-workflow-launcher-system">
+	<description>INB Web Workflow Enactor by jmfernandez Ant script $Id$</description>
+	
+	<!--
+		Configuration properties
+	-->
+	<dirname property="iwwem.antfile.dir" file="${ant.file}"/>
+	<property file="${iwwem.antfile.dir}/build.properties"/>
+	
+	<dirname property="iwwem.antfile.dir.parent" file="${iwwem.antfile.dir}"/>
+	<property name="iwwem.weblauncher.src" location="weblauncher" />
+	<property name="maven.settings.local" location="" />
+	<property name="maven.settings.t1backend" location="${iwwem.antfile.dir}/t1backend/settings-maven.xml" />
+	<property name="maven.settings.t2backend" location="${iwwem.antfile.dir}/t2backend/settings-maven.xml" />
+	
+	<property name="taverna.biomoby.src" value="t1backend/taverna-biomoby"/>
+	
+	<!--
+		Targets
+	-->
+	
+	<target name="init">
+		<!-- Creating the timestamp -->
+		<tstamp/>
+		<!--
+		<splash/>
+		-->
+	</target>
+	
+	<target name="checkout-local-biomoby" depends="init">
+		<delete dir="${taverna.biomoby.src}" includeemptydirs="true">
+		</delete>
+		<!--
+		<cvs cvsRoot=":pserver:anonymous@taverna.cvs.sourceforge.net:/cvsroot/taverna"
+			compressionlevel="3"
+			package="taverna1.0/taverna-biomoby"
+			dest="${taverna.biomoby.src}"
+			failonerror="true"
+		/>
+		-->
+		<exec executable="cvs" failonerror="true">
+			<arg value="-z3"/>
+			<arg value="-d:pserver:anonymous@taverna.cvs.sourceforge.net:/cvsroot/taverna"/>
+			<arg value="co"/>
+			<arg value="-d"/>
+			<arg value="${taverna.biomoby.src}"/>
+			<arg value="taverna1.0/taverna-biomoby"/>
+		</exec>
+	</target>
+	
+	<target name="prepare-local-biomoby" depends="init">
+		<cvs
+			dest="${taverna.biomoby.src}"
+			command="update"
+			compressionlevel="3"
+			failonerror="true"
+		/>
+		<!--
+		<exec dir="${taverna.biomoby.src}" executable="cvs" failonerror="true">
+			<arg value="-z3"/>
+			<arg value="update"/>
+		</exec>
+		-->
+		
+		<!--
+		<delete dir="${taverna.biomoby.src}/src/test" includeemptydirs="true">
+		</delete>
+		<delete dir="${taverna.biomoby.src}/target" includeemptydirs="true">
+		</delete>
+		-->
+	</target>
+	
+	<target name="install-local-biomoby" depends="init">
+		<exec executable="mvn" dir="${taverna.biomoby.src}" failonerror="true">
+			<env key="IWWEM_WEBLAUNCHER" value="${iwwem.weblauncher.src}"/>
+			<arg value="-e"/>
+			<arg value="-P"/>
+			<arg value="override"/>
+			<arg value="-s"/>
+			<arg value="${maven.settings.t1backend}"/>
+			<arg value="install"/>
+			<arg value="-Dmaven.test.skip=true"/>
+		</exec>
+	</target>
+	
+	<target name="compile.backends" depends="compile.t1backend" description="Compilation of Java/Maven backend modules">
+		<!-- In the near future this will depend on compile.t2backend -->
+	</target>
+	
+	<target name="compile.t1backend" depends="init" description="Compilation of Java/Maven Taverna 1.x backend">
+		<exec executable="mvn" dir="t1backend" failonerror="true">
+			<env key="IWWEM_WEBLAUNCHER" value="${iwwem.weblauncher.src}"/>
+			<arg value="-e"/>
+			<arg value="-s"/>
+			<arg value="${maven.settings.t1backend}"/>
+			<arg value="package"/>
+			<arg value="appassembler:assemble"/>
+		</exec>
+	</target>
+	
+	<target name="compile.t2backend" depends="init" description="Compilation of Java/Maven Taverna 2.x backend">
+		<exec executable="mvn" dir="t2backend" failonerror="true">
+			<env key="IWWEM_WEBLAUNCHER" value="${iwwem.weblauncher.src}"/>
+			<arg value="-e"/>
+			<arg value="-s"/>
+			<arg value="${maven.settings.t2backend}"/>
+			<arg value="package"/>
+			<!--
+			<arg value="assembly:assembly"/>
+			-->
+		</exec>
+	</target>
+	
+	<target name="compile.frontends" depends="init" description="Checking of Perl frontend modules">
+		<apply executable="perl" dir="${iwwem.weblauncher.src}/cgi-bin" failonerror="true">
+			<arg value="-c"/>
+			<arg value="-I${iwwem.weblauncher.src}/cgi-bin/LockNLog"/>
+			<fileset dir="${iwwem.weblauncher.src}/cgi-bin" followsymlinks="false">
+				<include name="**/*.pl" />
+				<include name="**/*.pm" />
+			</fileset>
+		</apply>
+	</target>
+	
+	<target name="compile" depends="compile.backends,compile.frontends" description="It compiles/checks the whole project's modules">
+	</target>
+	
+	<target name="deploy.backends" depends="compile.backends" description="It deploys only the backends">
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="mkdir -v -p '${deploy.ssh.dir}/cgi-bin'"
+		/>
+		<scp todir="${deploy.ssh.user}@${deploy.host}:${deploy.ssh.dir}/cgi-bin" keyfile="${deploy.ssh.keyfile}" passphrase="${deploy.ssh.passphrase}">
+			<fileset dir="${iwwem.weblauncher.src}/cgi-bin">
+				<include name="Backends"/>
+				<include name="Backends/**"/>
+				<exclude name="**/.svn"/>
+				<exclude name="**/.svn/**"/>
+			</fileset>
+		</scp>
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="cd '${deploy.ssh.dir}'/cgi-bin &amp;&amp; chmod -v go+w Backends/*backend-*"
+		/>
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="cd '${deploy.ssh.dir}'/cgi-bin/Backends/t1backend/bin &amp;&amp; chmod -v ugo+x inbworkflowparser inbworkflowlauncher patchDotSVG"
+		/>
+	</target>
+	
+	<target name="deploy" depends="deploy.backends,deploy.frontends,deploy.gui" description="It deploys the whole project to the destination repository">
+	</target>
+
+	<!-- description="It creates the remote destination directory" -->
+	<target name="deploy.frontends.gui.pre">
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="mkdir -v -p '${deploy.ssh.dir}/cgi-bin'"
+		/>
+		<scp todir="${deploy.ssh.user}@${deploy.host}:${deploy.ssh.dir}" keyfile="${deploy.ssh.keyfile}" passphrase="${deploy.ssh.passphrase}">
+			<fileset dir="${iwwem.weblauncher.src}" defaultexcludes="true">
+				<include name="etc"/>
+				<include name="etc/**"/>
+				<include name="docs"/>
+				<include name="docs/**"/>
+				<include name="style"/>
+				<include name="style/**"/>
+				<include name="licenses"/>
+				<include name="licenses/**"/>
+				<exclude name="**/.svn"/>
+				<exclude name="**/.svn/**"/>
+			</fileset>
+		</scp>
+	</target>
+	
+	<target name="deploy.frontends" depends="compile.frontends,deploy.frontends.gui.pre" description="It deploys the whole project frontends to the destination repository">
+		<scp todir="${deploy.ssh.user}@${deploy.host}:${deploy.ssh.dir}/cgi-bin" keyfile="${deploy.ssh.keyfile}" passphrase="${deploy.ssh.passphrase}">
+			<fileset dir="${iwwem.weblauncher.src}/cgi-bin">
+				<exclude name="Backends"/>
+				<exclude name="Backends/**"/>
+				<exclude name="**/.svn"/>
+				<exclude name="**/.svn/**"/>
+			</fileset>
+		</scp>
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="cd '${deploy.ssh.dir}'/cgi-bin/Storage &amp;&amp; chmod -v go+w workflows jobs .pending logs"
+		/>
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="cd '${deploy.ssh.dir}'/cgi-bin &amp;&amp; chmod -v ugo+x workflowmanager enactionlauncher enactionstatus IWWEMproxy IWWEMfs IWWEMconfirm"
+		/>
+	</target>
+	
+	<target name="deploy.gui" depends="deploy.frontends.gui.pre" description="It deploys the whole project GUI to the destination repository">
+		<scp todir="${deploy.ssh.user}@${deploy.host}:${deploy.ssh.dir}" keyfile="${deploy.ssh.keyfile}" passphrase="${deploy.ssh.passphrase}">
+			<fileset dir="${iwwem.weblauncher.src}">
+				<exclude name="cgi-bin"/>
+				<exclude name="cgi-bin/**"/>
+				<exclude name="etc"/>
+				<exclude name="etc/**"/>
+				<exclude name="docs"/>
+				<exclude name="docs/**"/>
+				<exclude name="style"/>
+				<exclude name="style/**"/>
+				<exclude name="licenses"/>
+				<exclude name="licenses/**"/>
+				<exclude name="**/.svn"/>
+				<exclude name="**/.svn/**"/>
+			</fileset>
+		</scp>
+	</target>
+	
+	<target name="populate.backends" depends="deploy" description="Populate backends installation of IWWE&amp;M (it avoids first run stalls)">
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="${deploy.ssh.dir}/cgi-bin/Backends/t1backend/bin/inbworkflowparser -baseDir ${deploy.ssh.dir}/cgi-bin/Backends/t1backend-maven -onlyUpdateBaseDir"
+		/>
+		<!--
+		<sshexec
+			host="${deploy.host}"
+			username="${deploy.ssh.user}"
+			keyfile="${deploy.ssh.keyfile}"
+			passphrase="${deploy.ssh.passphrase}"
+			command="chmod -v -R go+w ${deploy.ssh.dir}/cgi-bin/Backends/t1backend-maven"
+		/>
+		-->
+	</target>
+
+	<target name="clean.backends" description="Cleaning the project backends">
+		<exec executable="mvn" dir="t1backend" failonerror="true">
+			<env key="IWWEM_WEBLAUNCHER" value="${iwwem.weblauncher.src}"/>
+			<arg value="-e"/>
+			<arg value="-s"/>
+			<arg value="${maven.settings.t1backend}"/>
+			<arg value="clean"/>
+		</exec>
+		<!--
+		<exec executable="mvn" dir="t2backend" failonerror="true">
+			<env key="IWWEM_WEBLAUNCHER" value="${iwwem.weblauncher.src}"/>
+			<arg value="-e"/>
+			<arg value="-s"/>
+			<arg value="${maven.settings.t2backend}"/>
+			<arg value="clean"/>
+		</exec>
+		-->
+		<exec executable="svn" failonerror="true">
+			<arg value="update"/>
+			<arg value="target"/>
+		</exec>
+	</target>
+	
+	<target name="clean" depends="clean.backends" description="It cleans the project">
+	</target>
+</project>

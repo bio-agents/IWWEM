@@ -1,0 +1,521 @@
+@charset "UTF-8";
+
+/*
+	$Id$
+	IWWEM-styles.css
+	from INB Interactive Web Workflow Enactor & Manager (IWWE&M)
+	Author: José María Fernández González (C) 2007-2008
+	Institutions:
+	*	Spanish National Cancer Research Institute (CNIO, http://www.cnio.es/)
+	*	Spanish National Bioinformatics Institute (INB, http://www.inab.org/)
+	
+	This file is part of IWWE&M, the Interactive Web Workflow Enactor & Manager.
+
+	IWWE&M is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	IWWE&M is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with IWWE&M.  If not, see <http://www.gnu.org/licenses/agpl.txt>.
+
+	Original IWWE&M concept, design and coding done by José María Fernández González, INB (C) 2008.
+	Source code of IWWE&M is available at http://trac.bioinfo.cnio.es/trac/iwwem
+*/
+
+@import url("IWWEM-buttons.css");
+
+@import url("IWWEM-tables.css");
+
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+body.busy * {
+	cursor: wait;
+}
+
+textarea, input, select, .nWf , .sWf {
+	margin: 2px 2px 2px 2px;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+}
+
+textarea, input, select, .sWf {
+	border: 1px solid #c0c0c0;
+	background: #eeeeee;
+	font-size: 12px;
+}
+
+.nWf {
+	font-size: 14px;
+}
+
+.sWf {
+	white-space: nowrap;
+}
+
+.sWf input {
+	width:75%;
+	border:none;
+	background:none;
+}
+
+.sWf img {
+	cursor:pointer;
+	vertical-align: middle;
+}
+
+.license {
+	position:absolute;
+	left:10px;
+	bottom:10px;
+	font-style: italic;
+	font-size: 10pt;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	z-index: -1;
+	background-color: white;
+	border: 1px dashed black;
+}
+
+.hidden {
+	display: none;
+}
+
+.outerAbsDiv {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	right: 0px;
+	bottom: 0px;
+	background-color: black;
+	filter: alpha(opacity=50);
+	KHTMLOpacity: 0.5;
+	MozOpacity: 0.5;
+	opacity: 0.5;
+	z-index: 100;
+}
+
+.transAbsDiv {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	right: 0px;
+	bottom: 0px;
+	z-index: 101;
+}
+
+.submitEnaction {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	right: 0px;
+	bottom: 0px;
+	z-index: 102;
+}
+
+.secondarytop {
+	visibility: hidden;
+	clear:both;
+	height: 5%;
+}
+
+.secondary {
+	background-color: white;
+	/*
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 90%;
+	height: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: auto;
+	*/
+	position:relative;
+	height: 90%;
+	width: 90%;
+	left:5%;
+	top:0px;
+	/* top: 5%; */
+	/*
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 3%;
+	*/
+}
+
+.shimmer {
+	/*
+	width: 90%;
+	height: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: auto;
+	*/
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	right: 0px;
+	bottom: 0px;
+	filter: alpha(opacity=0);
+	KHTMLOpacity: 0.5;
+	MozOpacity: 0.5;
+	opacity: 0.5;
+	z-index: 99;
+}
+
+.secondaryCentered {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.svgdiv , .fulldiv {
+	width:100%;
+	height:100%;
+	vertical-align: middle;
+}
+
+.svgdiv {
+	text-align: center;
+}
+
+.fulldiv {
+	text-align: left;
+}
+
+.scroll {
+	vertical-align: top;
+	empty-cells: show;
+	display: block;
+	width:100%;
+	height:100%;
+	overflow: auto;
+	text-align: left;
+}
+
+.scrolldata {
+	vertical-align: top;
+	empty-cells: show;
+	display: block;
+	width:80mm;
+	height:120mm;
+	overflow: auto;
+	text-align: left;
+	border: 1px solid #dfd8c8;
+	background-color: #f5ede9;
+}
+
+.scrolldatawide {
+	vertical-align: top;
+	display: block;
+	width:100%;
+	height:100%;
+	overflow: auto;
+	text-align: left;
+	border: 1px solid #dfd8c8;
+	background-color: #f5ede9;
+	margin: 0px;
+	padding: 0px;
+}
+
+.scrolldatalarge {
+	vertical-align: top;
+	empty-cells: show;
+	display: block;
+	/*
+	max-width:145mm;
+	*/
+	width:145mm;
+	height:120mm;
+	overflow: auto;
+	text-align: left;
+	border: 1px solid #dfd8c8;
+	background-color: #f5ede9;
+}
+
+.borderedInput {
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 12px;
+	padding: 4px;
+	border: 1px solid #cbb945;
+	background-color: #fffadb;
+	margin: 6px;
+	white-space: nowrap;
+}
+
+.borderedOption {
+	background-color: #d5dff3;
+	color: #000;
+	/*
+	padding: 5px 1px 4px 1px;
+	*/
+	margin: 3px 3px 3px 3px;
+	padding: 1px 3px 1px 3px;
+	border:1px solid #36c;
+	vertical-align: center;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 10px;
+	/*
+	display: -moz-inline-block;
+	*/
+	display: inline-block;
+}
+
+.scrolldatamin {
+	vertical-align: top;
+	empty-cells: show;
+	display: block;
+	width:95%;
+	height:95%;
+	overflow: auto;
+	text-align: left;
+	border: 1px solid #c0c0c0;
+	background-color: #eeeeee;
+	margin: 2px 2px 2px 2px;
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+}
+
+/* Styled file inputs (to be approved) */
+
+DIV.fileinputs {
+	position: relative;
+	height: 30px;
+	width: 300px;
+}
+
+INPUT.file {
+	width: 300px;
+	margin: 0;
+}
+
+INPUT.file.hidden {
+	position: relative;
+	text-align: right;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 202;
+}
+
+DIV.fakefile {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 350px;
+	padding: 0;
+	margin: 0;
+	z-index: 201;
+	line-height: 90%;
+}
+
+DIV.fakefile input {
+	margin-bottom: 5px;
+	margin-left: 0;
+}
+
+.IOStat, .IOStatLoading {
+	font-weight: bold
+}
+
+.IOStat img {
+	visibility: hidden;
+}
+
+.IOStatLoading img {
+	visibility: visible;
+}
+
+.hiddenbranch {
+	display: none;
+}
+
+SPAN.scrollswitch , SPAN.noscrollswitch {
+	color: blue;
+	cursor: pointer;
+	-moz-user-select: none;
+}
+
+DIV.branchcontainer {
+	margin: 0px;
+	height: auto;
+	overflow: visible;
+	border: none;
+}
+
+DIV.scrollbranchcontainer {
+	height: 60px;
+	overflow: auto;
+	border: 1px solid brown;
+}
+
+/*
+SPAN.scrollswitch ~ DIV.branchcontainer {
+	height: 60px;
+	overflow: auto;
+	border: 1px solid brown;
+}
+*/
+
+DIV.scrollbranchopen DIV.branchcontainer ,
+DIV.branchopen DIV.branchcontainer
+{
+	display: block;
+}
+
+DIV.scrollbranch DIV.branchcontainer ,
+DIV.branch DIV.branchcontainer
+{
+	display: none;
+}
+
+SPAN.branchlabel, SPAN.branchlabelopen, .leaflabel , .scrollswitch, .noscrollswitch, .leaf, .deadleaf, .seed, .fruit {
+	font-family: Arial, Helvetica, Georgia, sans-serif;
+	font-size: 10px;
+}
+
+SPAN.branchlabel, SPAN.branchlabelopen, .leaflabel {
+	background-repeat: no-repeat;
+	background-position: center left;
+	padding-left: 12px;
+}
+
+/*
+span.branchlabel:focus {
+	background-color:blue;
+}
+*/
+
+DIV.branch, DIV.branchopen , DIV.scrollbranch, DIV.scrollbranchopen , .leaf, .deadleaf , .fruit , .seed {
+	margin-left: 15px;
+}
+
+DIV.branch DIV.branchcontainer , DIV.leaf DIV.branchcontainer {
+	margin-left: 0px;
+}
+
+.seed > .leaflabel {
+	background-image: url(seed-small.png);
+}
+
+.fruit > .leaflabel {
+	background-image: url(twisty-fruit.png);
+}
+
+SPAN.branchlabel {
+	background-image: url(twisty-clsd.png);
+}
+
+SPAN.branchlabelopen {
+	background-image: url(twisty-open.png);
+}
+
+SPAN.branchlabel, SPAN.leaflabel, .seed {
+	cursor: pointer;
+	-moz-user-select: none;
+}
+
+.fruit {
+	-moz-user-select: none;
+}
+
+/* .leaf > .leaflabel { */
+.leaflabel {
+	background-image: url(branch.png);
+}
+
+.leaflabel {
+	font-style: italic;
+	color: green;
+}
+
+.deadleaf {
+	color: gray;
+}
+
+SPAN.branchlabel , SPAN.branchlabelopen {
+	font-weight: bold;
+	color: brown;
+}
+
+/* Tweaking pretty-printing */
+
+.prettyprint.noborder , .noborder {
+	border:0px;
+	font-size: 10px;
+	/*
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	*/
+}
+
+
+/* Selected options */
+.selOption , .selOptionEven {
+	background-color: white;
+	white-space: nowrap;
+	border-color: gray;
+	cursor: pointer;
+	display:list-item;
+}
+
+.selOptionEven {
+	background-color: #F0F0F0;
+}
+
+.selOption.selected , .selOptionEven.selected {
+	background-color: #66CCFF;
+	white-space: normal;
+}
+
+a.inputhelp , a.inputhelpie {
+	text-decoration: none;
+}
+
+a.inputhelp {
+	position:relative;
+	z-index: auto;
+}
+
+a.inputhelp img , a.inputhelpie img {
+	border: none;
+	vertical-align:middle;
+}
+
+a.inputhelp span {
+	display:none;
+	white-space:normal;
+}
+
+
+a.inputhelp:hover , div a.inputhelp.hover {
+	text-decoration: none;
+	position:relative;
+	z-index:1;
+}
+
+a.inputhelp:hover span , div a.inputhelp.hover span {
+	display:block;
+	position:absolute;
+	z-index:auto;
+	top:2em; left:2em; width:15em;
+	border:1px solid #0cf;
+	background-color:#cff; color:#000;
+	text-align: center;
+	white-space:normal;
+}
+
+.secyellow {
+	border: 1px solid #cbb945;
+	background-color: #fffadb;
+}
